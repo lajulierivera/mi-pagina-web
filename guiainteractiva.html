@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guía Vocabulario Alemán Interactivo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #fff3e0;
+        text-align: center;
+        padding: 20px;
+    }
+    h2 { color: #f57c00; margin-bottom: 20px; }
+    .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .tab-button {
+        padding: 10px 20px;
+        border-radius: 12px;
+        border: none;
+        background-color: #ffb74d;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .tab-button.active { background-color: #f57c00; }
+    .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    .word-card {
+        background: linear-gradient(135deg, #ffe082, #ffcc80);
+        border-radius: 16px;
+        padding: 20px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        transition: transform 0.15s, box-shadow 0.25s, background 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    .word-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 7px 15px rgba(0,0,0,0.25);
+    }
+</style>
+</head>
+<body>
+
+<h2>Haz clic en la palabra o frase para escucharla 🎧🇩🇪</h2>
+
+<div class="tabs">
+    <button class="tab-button active" onclick="showSection(1, this)">Greetings</button>
+    <button class="tab-button" onclick="showSection(2, this)">Travel</button>
+    <button class="tab-button" onclick="showSection(3, this)">Food</button>
+    <button class="tab-button" onclick="showSection(4, this)">Emergencies</button>
+    <button class="tab-button" onclick="showSection(5, this)">Daily Talk</button>
+</div>
+
+<div id="container" class="container"></div>
+
+<script>
+const sections = {
+    1: [
+        "👋 Hallo","🌅 Guten Morgen","🌞 Guten Tag","🌇 Guten Abend","🙇‍♂️ Entschuldigung",
+        "❓ Wie heißt du? / Wie heißen Sie?","📝 Ich heiße…","🌍 Ich komme aus...","😊 Schön, dich kennenzulernen",
+        "🤔 Wie geht’s?","👍 Gut, danke","👉 Und dir? / Und Ihnen?","👋 Tschüss!"
+    ],
+    2: [
+        "✈️ Wo ist der Flughafen?","🎫 Ein Ticket, bitte","💵 Wie viel kostet das Ticket?","✈️ Ich habe einen Flug nach…",
+        "🚉 Wo ist der Bahnhof?","🚌 Wo ist die Bushaltestelle?","🚕 Ich möchte ein Taxi","🚏 Zum Bahnhof, bitte",
+        "🧳 Ich bin Tourist","🗺️ Ich habe mich verlaufen","🛎️ Wie komme ich zum Hotel?","🙏 Danke für Ihre Hilfe"
+    ],
+    3: [
+        "🍽️ Ich möchte…","📋 Die Speisekarte, bitte","💵 Die Rechnung, bitte","💧 Wasser ohne Eis, bitte","🍴 Guten Appetit!",
+        "😋 Sehr lecker!","🥦 Ich bin Vegetarier(in)","🍔 Ich habe Hunger","🍽️ Ich bin satt","🍺 Noch ein Bier, bitte!"
+    ],
+    4: [
+        "🆘 Hilfe!","👨‍⚕️ Ich brauche einen Arzt","😖 Ich habe Schmerzen","🏥 Wo ist das Krankenhaus?","🤒 Ich bin krank",
+        "💊 Ich brauche Medikamente","👮‍♂️ Polizei!","🛂 Mein Pass ist weg!","🤧 Ich bin allergisch gegen…","✅ Alles ist okay"
+    ],
+    5: [
+        "💖 Danke","🙏 Bitte","🙇‍♂️ Entschuldigung","❓ Ich verstehe nicht","🔄 Können Sie das wiederholen?",
+        "👌 Kein Problem","🤩 Wirklich?","🎉 Super!","❤️ Ich liebe Deutschland","👋 Tschüss, bis bald!"
+    ]
+};
+
+let currentSection = 1;
+
+function showSection(section, button){
+    currentSection = section;
+    const container = document.getElementById('container');
+    container.innerHTML = '';
+    sections[section].forEach(word => {
+        const div = document.createElement('div');
+        div.className = 'word-card';
+        div.textContent = word;
+        div.onclick = () => speak(div, word.replace(/^.+?\s/, '')); // quitar emoji para TTS
+        container.appendChild(div);
+    });
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+    button.classList.add('active');
+}
+
+function speak(card, text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'de-DE';
+    utterance.rate = 0.9;
+    speechSynthesis.speak(utterance);
+    card.style.background = '#ffe082';
+    setTimeout(() => {
+        card.style.background = 'linear-gradient(135deg, #ffe082, #ffcc80)';
+    }, 400);
+}
+
+// Mostrar sección 1 por defecto
+showSection(1, document.querySelector('.tab-button.active'));
+</script>
+
+</body>
+</html>
